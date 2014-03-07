@@ -20,4 +20,4 @@ addons:
     branch_pattern: coverity_scan
 
 # Change this to your needs
-script: make
+script: ./configure --cc=$CC && make
