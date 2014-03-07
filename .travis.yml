@@ -2,5 +2,22 @@ language: c
 compiler:
   - gcc
   - clang
+
+env:
+  global:
+   # The next declration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "QW3xNY/GjgFFhs/X6iG8xx5UoHce6figfWrywoV+1hPGOInpEcJNtWFOIO+DkHsy6JoaHJ8PvkUt+iY+dKoJx9EuTHz5pFm69KwNVM4lesESRC2urGaOKhBNZsg6k2EOX91QaaqRdHJ8Vl/yY8UXMNqMK6VP5aScnUVxJG0cBpE="
+
+addons:
+  coverity_scan:
+    project:
+      name: "jeeb/L-SMASH"
+      description: "L-SMASH test repo"
+    notification_email: jeebjp@gmail.com
+    build_command_prepend: "./configure"
+    build_command: "make"
+    branch_pattern: coverity_scan
+
 # Change this to your needs
-script: ./configure && make
+script: make
