@@ -15,7 +15,7 @@ addons:
       name: "jeeb/L-SMASH"
       description: "L-SMASH test repo"
     notification_email: jeebjp@gmail.com
-    build_command_prepend: "./configure"
+    build_command_prepend: "./configure --cc=$CC"
     build_command: "make"
     branch_pattern: coverity_scan
 
