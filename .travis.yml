@@ -16,6 +16,7 @@ before_install:
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40
     --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
   - sudo update-alternatives --config gcc
+  - hash -r
 
 env:
   global:
@@ -34,4 +35,4 @@ addons:
     branch_pattern: coverity_scan
 
 # Change this to your needs
-script: clang --version && ./configure --cc=$CC && make
+script: type clang && hash -r && type clang && clang --version && ./configure --cc=$CC && make
