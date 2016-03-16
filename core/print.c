@@ -2228,6 +2228,17 @@ static int isom_print_tfhd( FILE *fp, lsmash_file_t *file, isom_box_t *box, int 
     return 0;
 }
 
+static int isom_print_tfxd( FILE *fp, lsmash_file_t *file, isom_box_t *box, int level )
+{
+    isom_tfxd_t *tfxd = (isom_tfxd_t *)box;
+    int indent = level;
+    isom_print_box_common( fp, indent++, box, "Smooth Streaming Track Fragment Timestamps" );
+    lsmash_ifprintf( fp, indent, "version = %"PRIu8"\n", tfxd->version );
+    lsmash_ifprintf( fp, indent, "fragment_dts = %"PRIu64"\n", tfxd->fragment_dts );
+    lsmash_ifprintf( fp, indent, "fragment_duration = %"PRIu64"\n", tfxd->fragment_duration );
+    return 0;
+}
+
 static int isom_print_tfdt( FILE *fp, lsmash_file_t *file, isom_box_t *box, int level )
 {
     isom_tfdt_t *tfdt = (isom_tfdt_t *)box;
@@ -2534,6 +2545,7 @@ static isom_print_box_t isom_select_print_func( isom_box_t *box )
         ADD_PRINT_BOX_TABLE_ELEMENT( ISOM_BOX_TYPE_MFRA, isom_print_mfra );
         ADD_PRINT_BOX_TABLE_ELEMENT( ISOM_BOX_TYPE_TFRA, isom_print_tfra );
         ADD_PRINT_BOX_TABLE_ELEMENT( ISOM_BOX_TYPE_MFRO, isom_print_mfro );
+        ADD_PRINT_BOX_TABLE_ELEMENT( ISOM_BOX_TYPE_TFXD, isom_print_tfxd );
         ADD_PRINT_BOX_TABLE_ELEMENT( LSMASH_BOX_TYPE_UNSPECIFIED, NULL );
 #undef ADD_PRINT_BOX_TABLE_ELEMENT
     }
