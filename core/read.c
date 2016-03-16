@@ -38,6 +38,12 @@
 
 static int isom_bs_read_box_common( lsmash_bs_t *bs, isom_box_t *box )
 {
+    static const uint8_t tfxd_uuid[] = {
+        0x6d, 0x1d, 0x9b, 0x05, 0x42, 0xd5, 0x44, 0xe6,
+        0x80, 0xe2, 0x14, 0x1d, 0xaf, 0xf7, 0x57, 0xb2
+    };
+    uint8_t read_uuid[16] = { 0 };
+
     assert( bs && box && box->file );
     /* Reset the counter so that we can use it to get position within the box. */
     lsmash_bs_reset_counter( bs );
@@ -80,13 +86,24 @@ static int isom_bs_read_box_common( lsmash_bs_t *bs, isom_box_t *box )
     if( box->type.fourcc == ISOM_BOX_TYPE_UUID.fourcc
      && box->size >= lsmash_bs_count( bs ) + 16 )
     {
-        /* Get UUID. */
-        lsmash_box_type_t *type = &box->type;
+        /* First parse the UUID into a local variable. */
         uint64_t temp64 = lsmash_bs_get_be64( bs );
-        type->user.fourcc = (temp64 >> 32) & 0xffffffff;
-        LSMASH_SET_BE32( &type->user.id[0], temp64 );
+        LSMASH_SET_BE64( &read_uuid[0], temp64 );
         temp64 = lsmash_bs_get_be64( bs );
-        LSMASH_SET_BE64( &type->user.id[4], temp64 );
+        LSMASH_SET_BE64( &read_uuid[8], temp64 );
+
+        /* Compare against known vendor extension UUIDs */
+        if(!memcmp( read_uuid, tfxd_uuid, 16)) {
+            box->type.fourcc = ISOM_BOX_TYPE_TFXD.fourcc;
+        } else {
+            /* This is a generic UUID box, mark it down as such */
+            lsmash_box_type_t *type = &box->type;
+
+            LSMASH_SET_BE32( &type->user.fourcc, *((uint32_t *)&read_uuid[0]) );
+            LSMASH_SET_LE32( &type->user.id[0],  *((uint32_t *)&read_uuid[4]) );
+            LSMASH_SET_LE32( &type->user.id[4],  *((uint32_t *)&read_uuid[8]) );
+            LSMASH_SET_LE32( &type->user.id[8],  *((uint32_t *)&read_uuid[12]) );
+        }
     }
     return bs->eob;
 }

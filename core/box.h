@@ -2135,6 +2135,9 @@ struct lsmash_root_tag
 #define ISOM_BOX_TYPE_HVCC lsmash_form_iso_box_type( LSMASH_4CC( 'h', 'v', 'c', 'C' ) )
 #define ISOM_BOX_TYPE_WFEX lsmash_form_iso_box_type( LSMASH_4CC( 'w', 'f', 'e', 'x' ) )
 
+/* MS Smooth Streaming UUID boxes */
+#define ISOM_BOX_TYPE_TFXD lsmash_form_iso_box_type( LSMASH_4CC( 't', 'f', 'x', 'd' ) )
+
 #define QT_BOX_TYPE_ALLF lsmash_form_qtff_box_type( LSMASH_4CC( 'A', 'l', 'l', 'F' ) )
 #define QT_BOX_TYPE_CLEF lsmash_form_qtff_box_type( LSMASH_4CC( 'c', 'l', 'e', 'f' ) )
 #define QT_BOX_TYPE_CLIP lsmash_form_qtff_box_type( LSMASH_4CC( 'c', 'l', 'i', 'p' ) )
