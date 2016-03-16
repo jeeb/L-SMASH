@@ -2415,7 +2415,7 @@ static int isom_read_tfxd( lsmash_file_t *file, isom_box_t *box, isom_box_t *par
         return LSMASH_ERR_INVALID_DATA;
     }
 
-    return 0;
+    return isom_read_leaf_box_common_last_process( file, box, level, tfxd );
 }
 
 static void isom_read_skip_extra_bytes( lsmash_bs_t *bs, uint64_t size )
