@@ -1130,6 +1130,7 @@ DEFINE_SIMPLE_BOX_REMOVER( isom_remove_mdat, mdat, lsmash_file_t )
 DEFINE_SIMPLE_BOX_REMOVER( isom_remove_mfhd, mfhd, isom_moof_t )
 DEFINE_SIMPLE_BOX_REMOVER( isom_remove_tfhd, tfhd, isom_traf_t )
 DEFINE_SIMPLE_BOX_REMOVER( isom_remove_tfdt, tfdt, isom_traf_t )
+DEFINE_SIMPLE_BOX_REMOVER( isom_remove_tfxd, tfxd, isom_traf_t )
 
 static void isom_remove_trun( isom_trun_t *trun )
 {
@@ -1715,6 +1716,7 @@ DEFINE_SIMPLE_BOX_IN_LIST_ADDER( isom_add_trun, trun, traf, ISOM_BOX_TYPE_TRUN, 
 DEFINE_SIMPLE_BOX_ADDER        ( isom_add_mfra, mfra, file, ISOM_BOX_TYPE_MFRA, LSMASH_BOX_PRECEDENCE_ISOM_MFRA, lsmash_file_t )
 DEFINE_SIMPLE_BOX_IN_LIST_ADDER( isom_add_tfra, tfra, mfra, ISOM_BOX_TYPE_TFRA, LSMASH_BOX_PRECEDENCE_ISOM_TFRA )
 DEFINE_SIMPLE_BOX_ADDER        ( isom_add_mfro, mfro, mfra, ISOM_BOX_TYPE_MFRO, LSMASH_BOX_PRECEDENCE_ISOM_MFRO )
+DEFINE_SIMPLE_BOX_ADDER        ( isom_add_tfxd, tfxd, traf, ISOM_BOX_TYPE_TFXD, LSMASH_BOX_PRECEDENCE_ISOM_TFXD )
 
 isom_mdat_t *isom_add_mdat( lsmash_file_t *file )
 {

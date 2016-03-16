@@ -1592,6 +1592,13 @@ typedef struct
     isom_sample_flags_t default_sample_flags;       /* override default_sample_flags in Track Extends Box */
 } isom_tfhd_t;
 
+typedef struct
+{
+    ISOM_FULLBOX_COMMON;
+    uint64_t fragment_dts;
+    uint64_t fragment_duration;
+} isom_tfxd_t;
+
 /* Track Fragment Base Media Decode Time Box
  * This box provides the absolute decode time, measured on the media timeline, of the first sample in decode order in the track fragment.
  * This can be useful, for example, when performing random access in a file;
@@ -1642,6 +1649,7 @@ typedef struct
     ISOM_BASEBOX_COMMON;
     isom_tfhd_t         *tfhd;          /* Track Fragment Header Box */
     isom_tfdt_t         *tfdt;          /* Track Fragment Base Media Decode Time Box */
+    isom_tfxd_t         *tfxd;
     lsmash_entry_list_t  trun_list;     /* Track Fragment Run Box List
                                          * If the duration-is-empty flag is set in the tf_flags, there are no track runs. */
     isom_sdtp_t         *sdtp;          /* Independent and Disposable Samples Box (available under Protected Interoperable File Format) */
@@ -2280,6 +2288,7 @@ struct lsmash_root_tag
 #define LSMASH_BOX_PRECEDENCE_ISOM_MDAT (LSMASH_BOX_PRECEDENCE_N  -  0 * LSMASH_BOX_PRECEDENCE_S)
 #define LSMASH_BOX_PRECEDENCE_ISOM_FREE (LSMASH_BOX_PRECEDENCE_N  -  0 * LSMASH_BOX_PRECEDENCE_S)
 #define LSMASH_BOX_PRECEDENCE_ISOM_SKIP (LSMASH_BOX_PRECEDENCE_N  -  0 * LSMASH_BOX_PRECEDENCE_S)
+#define LSMASH_BOX_PRECEDENCE_ISOM_TFXD (LSMASH_BOX_PRECEDENCE_N  -  0 * LSMASH_BOX_PRECEDENCE_S)
 
 /* Track reference types */
 typedef enum
@@ -2756,6 +2765,7 @@ isom_mdat_t *isom_add_mdat( lsmash_file_t *file );
 isom_free_t *isom_add_free( void *parent_box );
 isom_styp_t *isom_add_styp( lsmash_file_t *file );
 isom_sidx_t *isom_add_sidx( lsmash_file_t *file );
+isom_tfxd_t *isom_add_tfxd( isom_traf_t *traf );
 
 void isom_remove_sample_description( isom_sample_entry_t *sample );
 void isom_remove_unknown_box( isom_unknown_box_t *unknown_box );

@@ -2394,6 +2394,30 @@ static int isom_read_mfro( lsmash_file_t *file, isom_box_t *box, isom_box_t *par
     return isom_read_leaf_box_common_last_process( file, box, level, mfro );
 }
 
+static int isom_read_tfxd( lsmash_file_t *file, isom_box_t *box, isom_box_t *parent, int level )
+{
+    ADD_BOX( tfxd, isom_traf_t );
+    lsmash_bs_t *bs = file->bs;
+
+    if( box->size >= lsmash_bs_count( bs ) + 4 ) {
+        tfxd->version = lsmash_bs_get_byte( bs );
+        lsmash_bs_skip_bytes( bs, 3 );
+        if ( !tfxd->version && box->size >= lsmash_bs_count( bs ) + 8 ) {
+            tfxd->fragment_dts      = lsmash_bs_get_be32( bs );
+            tfxd->fragment_duration = lsmash_bs_get_be32( bs );
+        } else if ( tfxd->version && box->size >= lsmash_bs_count( bs ) + 16 ) {
+            tfxd->fragment_dts      = lsmash_bs_get_be64( bs );
+            tfxd->fragment_duration = lsmash_bs_get_be64( bs );
+        } else {
+            return LSMASH_ERR_INVALID_DATA;
+        }
+    } else {
+        return LSMASH_ERR_INVALID_DATA;
+    }
+
+    return 0;
+}
+
 static void isom_read_skip_extra_bytes( lsmash_bs_t *bs, uint64_t size )
 {
     if( !bs->unseekable )
@@ -2778,6 +2802,7 @@ int isom_read_box( lsmash_file_t *file, isom_box_t *box, isom_box_t *parent, uin
         ADD_BOX_READER_TABLE_ELEMENT( ISOM_BOX_TYPE_MFRA, lsmash_form_iso_box_type,  isom_read_mfra );
         ADD_BOX_READER_TABLE_ELEMENT( ISOM_BOX_TYPE_TFRA, lsmash_form_iso_box_type,  isom_read_tfra );
         ADD_BOX_READER_TABLE_ELEMENT( ISOM_BOX_TYPE_MFRO, lsmash_form_iso_box_type,  isom_read_mfro );
+        ADD_BOX_READER_TABLE_ELEMENT( ISOM_BOX_TYPE_TFXD, lsmash_form_iso_box_type,  isom_read_tfxd );
         ADD_BOX_READER_TABLE_ELEMENT( LSMASH_BOX_TYPE_UNSPECIFIED, NULL,  NULL );
         assert( sizeof(box_reader_table) >= (size_t)i * sizeof(box_reader_table[0]) );
 #undef ADD_BOX_READER_TABLE_ELEMENT
